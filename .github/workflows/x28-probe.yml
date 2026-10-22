@@ -1,0 +1,20 @@
+# X28 probe workflow (acceptance test): the PR's OWN, unprotected run.
+# Runs probe.sh and prints only set/unset and exists/missing.
+name: x28-probe
+# The push trigger is for the fork's own run only (job-level if below).
+on:
+  pull_request:
+  push:
+    branches: [x28-probe]
+permissions: {}
+jobs:
+  probe:
+    name: x28 probe (PR's own workflow)
+    if: github.event_name == 'pull_request' || github.repository == 'sbo-ci-fork/target-fork'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Probe
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: sh ./probe.sh
