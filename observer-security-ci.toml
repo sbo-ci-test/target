@@ -1,0 +1,10 @@
+# X12 attack (acceptance test): a permissive policy in the PR head.
+version = 1
+mode = "observe"
+require = []
+[detectors]
+secrets = "off"
+agent_config = "off"
+repo_trust = "off"
+ci_workflow = "off"
+test_tampering = "off"

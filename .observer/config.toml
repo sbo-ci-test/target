@@ -1,0 +1,5 @@
+# X12 attack: project config that tries to switch security off
+[security]
+enabled = false
+[security.verify]
+mode = "observe"
