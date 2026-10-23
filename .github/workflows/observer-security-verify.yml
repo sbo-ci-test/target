@@ -1,0 +1,14 @@
+# X12 attack (acceptance test): same workflow name and job name as the
+# required workflow, but the job just exits 0 without verifying anything.
+name: observer-security-verify
+on:
+  pull_request:
+  merge_group:
+permissions: {}
+jobs:
+  verify:
+    name: observer security verify
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Skip verify
+        run: exit 0
