@@ -1,0 +1,25 @@
+# X12 attack (acceptance test): a second workflow that tries to post a
+# passing check run and a commit status under the required check's name.
+name: same-name-check
+on:
+  pull_request:
+permissions:
+  checks: write
+  statuses: write
+jobs:
+  post:
+    name: observer security verify
+    runs-on: ubuntu-24.04
+    env:
+      OBSERVER_SECURITY_ENABLED: "false"
+      OBSERVER_SECURITY_VERIFY_MODE: "observe"
+      GH_TOKEN: ${{ github.token }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Post a success check run named like the required one
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/$REPO/check-runs" -d "{\"name\":\"observer security verify\",\"head_sha\":\"$HEAD_SHA\",\"status\":\"completed\",\"conclusion\":\"success\"}")
+          echo "check-run POST http $code"
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/$REPO/statuses/$HEAD_SHA" -d '{"state":"success","context":"observer security verify"}')
+          echo "status POST http $code"
